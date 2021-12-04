@@ -28,8 +28,8 @@ def download_data():
         for word in wordlist.split(" "):
             vector = wv[word]
             vectors[word] = vector.tolist()
-        jsonString = json.dumps(vectors)
-        f.write(jsonString)
+        json_string = json.dumps(vectors)
+        f.write(json_string)
 
 if __name__ == "__main__":
     download_data()
