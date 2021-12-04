@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+import sys
 
 
 def load_words(path):
@@ -73,20 +74,53 @@ def plot(labels, vectors_2d, groupings):
     plt.show()
 
 
-def main():
-    words = load_words("vectors.txt")
-    labels, vectors_2d = project_words(words)
-    grouping = None
-    i = 0
-    while not grouping and i < 1000000:
-        groupings = group_words(words, vectors_2d, labels, n_groupings=4)
-        if all([len(x) != 0 for x in groupings]):
-            grouping = groupings
-        i += 1
-        if i % 25 == 0:
-            print(i)
-    plot(labels, vectors_2d, grouping)
+def query_words(word, labels, vectors_2d):
+    word_vector = None
+
+    for i, label in enumerate(labels):
+        if label == word:
+            word_vector = list(vectors_2d[i])
+
+    if word_vector == None:
+        quit("word not found")
+
+    dists = []
+    for i, vector in enumerate(vectors_2d):
+        dists.append((labels[i], np.linalg.norm(
+            np.subtract(word_vector, vector))))
+
+    dists.sort(key=lambda x: x[1])
+
+    print("top 10 closely related words:")
+
+    print("word: distance")
+    for entry in dists[1:11]:
+        print(f"{entry[0]}: {entry[1]}")
+
+
+def main(args):
+    if len(args) == 0:
+        words = load_words("vectors.txt")
+        labels, vectors_2d = project_words(words)
+        grouping = None
+        i = 0
+        while not grouping and i < 1000000:
+            groupings = group_words(words, vectors_2d, labels, n_groupings=4)
+            if all([len(x) != 0 for x in groupings]):
+                grouping = groupings
+            i += 1
+            if i % 25 == 0:
+                print(i)
+        plot(labels, vectors_2d, grouping)
+    elif args[0] == "query":
+        if len(args) != 2:
+            quit("invalid number of arguments")
+        words = load_words("vectors.txt")
+        labels, vectors_2d = project_words(words)
+        query_words(args[1], labels, vectors_2d)
+    else:
+        quit("invalid argument")
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
