@@ -69,8 +69,16 @@ def plot(labels, vectors_2d, groupings):
 def main():
     words = load_words("vectors.txt")
     labels, vectors_2d = project_words(words)
-    groupings = group_words(words, vectors_2d, labels, n_groupings=10)
-    plot(labels, vectors_2d, groupings)
+    grouping = None
+    i = 0
+    while not grouping and i < 1000000:
+        groupings = group_words(words, vectors_2d, labels, n_groupings=7)
+        if all([len(x)!=0 for x in groupings]):
+            grouping = groupings
+        i += 1
+        if i % 25 == 0:
+            print(i)
+    plot(labels, vectors_2d, grouping)
 
 if __name__ == "__main__":
     main()
