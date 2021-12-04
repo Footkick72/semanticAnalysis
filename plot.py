@@ -13,9 +13,6 @@ def project_words(words):
     labels = [word for word in words]
 
     u, _, _ = np.linalg.svd(vectors)
-
-    # take first 2 dimensions of u since the numbers in s are decreasing
-    # we want to take the highest 2 dimensions which is the first two, as verified by s
     vectors_2d = u[:, :2]
 
     return labels, vectors_2d
