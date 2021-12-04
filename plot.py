@@ -1,35 +1,33 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import json
-from sklearn.manifold import TSNE
 
 def load_words(path):
     with open(path, "r") as f:
         return json.loads(f.read())
 
-def project_words(words, num_dimensions):
-    vectors = [words[word] for word in words]
+def project_words(words):
+    vectors = np.array([words[word] for word in words])
     labels = [word for word in words]
 
-    tsne = TSNE(n_components=num_dimensions, random_state=0)
-    vectors_2d = tsne.fit_transform(vectors)
+    u, s, v = np.linalg.svd(vectors)
+    vectors_2d = np.transpose(np.matmul(v[0:2,:], np.transpose(vectors)))
 
-    return labels, vectors, vectors_2d
+    return labels, vectors_2d
 
-def group_words(words, vectors):
-    dim = len(vectors[0])
-    centers = [(np.random.rand(dim) * 2 - 1) for _ in range(4)]
-    groupings = [[] for _ in range(4)]
+def group_words(words, vectors_2d, labels, n_groupings = 4):
+    centers = [(np.random.rand(2) * 2 - 1) for _ in range(n_groupings)]
+    groupings = [[] for _ in range(n_groupings)]
     
     for _ in range(10): #iterations
-
-        groupings = [[] for _ in range(4)]
+        
+        groupings = [[] for _ in range(n_groupings)]
         
         for word in words:
             closest_group = 0
             closest_distance = 1e10
             for i, center in enumerate(centers):
-                distance = np.linalg.norm(np.subtract(center, words[word]))
+                distance = np.linalg.norm(np.subtract(center, vectors_2d[labels.index(word)]))
                 if distance < closest_distance:
                     closest_distance = distance
                     closest_group = i
@@ -38,7 +36,7 @@ def group_words(words, vectors):
         for i, group in enumerate(groupings):
             vecs = []
             for word in group:
-                vecs.append(np.array(words[word]))
+                vecs.append(vectors_2d[labels.index(word)])
             vecs = np.array(vecs)
             center = np.average(vecs, axis = 0)
             centers[i] = center
@@ -46,7 +44,7 @@ def group_words(words, vectors):
     return groupings
 
 def plot(labels, vectors_2d, groupings):
-    markers = [".", "o", "s", "v"]
+    markers = "ovs*PXDdp."
 
     for j, group in enumerate(groupings):
         xs = []
@@ -70,8 +68,8 @@ def plot(labels, vectors_2d, groupings):
     
 def main():
     words = load_words("vectors.txt")
-    labels, vectors, vectors_2d = project_words(words, 2)
-    groupings = group_words(words, vectors)
+    labels, vectors_2d = project_words(words)
+    groupings = group_words(words, vectors_2d, labels, n_groupings=10)
     plot(labels, vectors_2d, groupings)
 
 if __name__ == "__main__":
