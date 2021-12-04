@@ -74,7 +74,7 @@ def plot(labels, vectors_2d, groupings):
     plt.show()
 
 
-def query_words(word, labels, vectors_2d):
+def query_word(word, labels, vectors_2d):
     word_vector = None
 
     for i, label in enumerate(labels):
@@ -91,7 +91,7 @@ def query_words(word, labels, vectors_2d):
 
     dists.sort(key=lambda x: x[1])
 
-    print("top 10 closely related words:")
+    print(f"top 10 closely related words to {word} are:")
 
     print("word: distance")
     for entry in dists[1:11]:
@@ -117,7 +117,7 @@ def main(args):
             quit("invalid number of arguments")
         words = load_words("vectors.txt")
         labels, vectors_2d = project_words(words)
-        query_words(args[1], labels, vectors_2d)
+        query_word(args[1].strip().lower(), labels, vectors_2d)
     else:
         quit("invalid argument")
 
