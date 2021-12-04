@@ -7,8 +7,7 @@ def load_words(path):
     with open(path, "r") as f:
         return json.loads(f.read())
 
-def project_words(words):
-    num_dimensions = 2
+def project_words(words, num_dimensions):
     vectors = [words[word] for word in words]
     labels = [word for word in words]
 
@@ -71,7 +70,7 @@ def plot(labels, vectors_2d, groupings):
     
 def main():
     words = load_words("vectors.txt")
-    labels, vectors, vectors_2d = project_words(words)
+    labels, vectors, vectors_2d = project_words(words, 2)
     groupings = group_words(words, vectors)
     plot(labels, vectors_2d, groupings)
 
