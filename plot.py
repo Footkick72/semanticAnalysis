@@ -70,6 +70,9 @@ def plot(labels, vectors_2d, groupings):
                 ha='center',
             )
 
+    for group in groupings:
+        print(group)
+
     print([len(x) for x in groupings])
     plt.show()
 
@@ -97,16 +100,15 @@ def query_word(word, labels, vectors_2d):
     for entry in dists[1:11]:
         print(f"{entry[0]}: {entry[1]}")
 
-
 def main(args):
     if len(args) == 0:
-        words = load_words("vectors.txt")
+        words = load_words("vectors2.txt")
         labels, vectors_2d = project_words(words)
         grouping = None
         i = 0
         while not grouping and i < 1000000:
-            groupings = group_words(words, vectors_2d, labels, n_groupings=4)
-            if all([len(x) != 0 for x in groupings]):
+            groupings = group_words(words, vectors_2d, labels, n_groupings=3)
+            if all([len(x) >= 5 for x in groupings]):
                 grouping = groupings
             i += 1
             if i % 25 == 0:

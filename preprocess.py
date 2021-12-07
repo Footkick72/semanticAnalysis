@@ -23,11 +23,10 @@ import json
 
 
 def download_data():
-    wordlist = "accusatory abstruse acerbic admonishing aloof ambivalent analytical ardent authoritarian belligerent benevolent brusque caustic cautionary censorious charismatic complimentary conciliatory condemnatory condescending confrontational contemptuous contentious conversational curt cynical derisive despairing detached didactic diffident disdainful disillusioned dogmatic domineering dubious ebullient effusive elegiac eloquent emphatic enigmatic erudite euphoric exhortatory facetious farcical fatalistic flippant forthright frivolous haughty holier-than-thou impassive incisive incredulous indignant inflated insipid irrelevant jovial laudatory lofty ludicrous meditative melancholic mild moralistic nonchalant objective obsequious ominous patronizing penitent pessimistic polished provocative reasoned reserved reticent reverential sardonic scholarly skeptical sobering subtle supercilious tentative terse vindictive vitriolic wistful wry zealous"
-
-    wv = api.load("fasttext-wiki-news-subwords-300")
-
-    with open("vectors.txt", "a") as f:
+    #wordlist = "accusatory abstruse acerbic admonishing aloof ambivalent analytical ardent authoritarian belligerent benevolent brusque caustic cautionary censorious charismatic complimentary conciliatory condemnatory condescending confrontational contemptuous contentious conversational curt cynical derisive despairing detached didactic diffident disdainful disillusioned dogmatic domineering dubious ebullient effusive elegiac eloquent emphatic enigmatic erudite euphoric exhortatory facetious farcical fatalistic flippant forthright frivolous haughty holier-than-thou impassive incisive incredulous indignant inflated insipid irrelevant jovial laudatory lofty ludicrous meditative melancholic mild moralistic nonchalant objective obsequious ominous patronizing penitent pessimistic polished provocative reasoned reserved reticent reverential sardonic scholarly skeptical sobering subtle supercilious tentative terse vindictive vitriolic wistful wry zealous"
+    wordlist = "elegiac dubious complimentary skeptical indignant cautionary zealous authoritarian domineering charismatic patronizing condemnatory condescending aloof detached disillusioned fatalistic incredulous despairing admonishing accusatory derisive conciliatory ardent reverential confrontational laudatory ambivalent conversational belligerent cynical acerbic provocative caustic censorious obsequious exhortatory disdainful contentious penitent"
+    wv = api.load("word2vec-google-news-300")
+    with open("vectors2.txt", "w") as f:
         vectors = {}
         for word in wordlist.split(" "):
             vector = wv[word]
