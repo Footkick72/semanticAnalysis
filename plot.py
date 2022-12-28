@@ -1,7 +1,8 @@
-import matplotlib.pyplot as plt
-import numpy as np
 import json
 import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def load_words(path):
@@ -24,15 +25,15 @@ def group_words(words, vectors_2d, labels, n_groupings=4):
     groupings = [[] for _ in range(n_groupings)]
 
     for _ in range(10):  # iterations
-
         groupings = [[] for _ in range(n_groupings)]
 
         for word in words:
             closest_group = 0
             closest_distance = 1e10
             for i, center in enumerate(centers):
-                distance = np.linalg.norm(np.subtract(
-                    center, vectors_2d[labels.index(word)]))
+                distance = np.linalg.norm(
+                    np.subtract(center, vectors_2d[labels.index(word)])
+                )
                 if distance < closest_distance:
                     closest_distance = distance
                     closest_group = i
@@ -63,11 +64,13 @@ def plot(labels, vectors_2d, groupings):
         for i in range(len(group)):
             plt.annotate(
                 group[i],
-                (vectors_2d[labels.index(group[i])][0],
-                 vectors_2d[labels.index(group[i])][1]),
+                (
+                    vectors_2d[labels.index(group[i])][0],
+                    vectors_2d[labels.index(group[i])][1],
+                ),
                 textcoords="offset points",
                 xytext=(0, 10),
-                ha='center',
+                ha="center",
             )
 
     for group in groupings:
@@ -89,8 +92,7 @@ def query_word(word, labels, vectors_2d):
 
     dists = []
     for i, vector in enumerate(vectors_2d):
-        dists.append((labels[i], np.linalg.norm(
-            np.subtract(word_vector, vector))))
+        dists.append((labels[i], np.linalg.norm(np.subtract(word_vector, vector))))
 
     dists.sort(key=lambda x: x[1])
 
@@ -99,6 +101,7 @@ def query_word(word, labels, vectors_2d):
     print("word: distance")
     for entry in dists[1:11]:
         print(f"{entry[0]}: {entry[1]}")
+
 
 def main(args):
     if len(args) == 0:
